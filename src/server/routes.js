@@ -1,19 +1,18 @@
 import {h} from 'preact' // eslint-disable-line no-unused-vars
-import render from 'preact-render-to-string'
-import createStore from './../app/store/createStore'
-import App from './../app/components/App'
-import {Router} from 'express'
-import fetch from 'node-fetch'
-import withTimeout from './../app/utils/withTimeout'
-import {readFileSync} from 'fs'
-import {fetchPostsIfNeeded} from './../app/store/actions/posts'
-import {updateLocation} from './../app/store/actions/meta'
+import render from 'preact-render-to-string';
+import createStore from './../app/store/createStore';
+import App from './../app/components/App';
+import {Router} from 'express';
+import fetch from 'node-fetch';
+import {readFileSync} from 'fs';
+import {fetchPostsIfNeeded} from './../app/store/actions/posts';
+import {updateLocation} from './../app/store/actions/meta';
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/rev-manifest.json`));
 
 
 const manifestUrl = `/${assets['static/manifest.json']}`;
-const inlineCss = readFileSync(`${__dirname}/public/${assets['bundle.css']}`);
+const inlineCss = readFileSync(`${__dirname}/public/${assets['style.css']}`);
 const inlineJs = readFileSync(`${__dirname}/public/${assets['bundle.js']}`);
 const AppShell = ({html, state}) => `<!DOCTYPE html>
 <html lang="en-US">
@@ -34,7 +33,7 @@ const AppShell = ({html, state}) => `<!DOCTYPE html>
   </body>
 </html>`;
 
-const createPreloadedState = () => ({}); // stub
+const createInitialState = () => ({}); // stub
 
 const createAppShell = (store) => {
   const state = store.getState();
@@ -43,11 +42,13 @@ const createAppShell = (store) => {
 };
 
 export default Router().get('/', (req, res) => {
-  const store = createStore(createPreloadedState(), fetch);
+  const store = createStore(createInitialState(), fetch);
   store.dispatch(updateLocation(req.originalUrl));
 
-  withTimeout(store.dispatch(fetchPostsIfNeeded()), 100)
-    .catch((err) => console.log(err))
-    .then(() => res.send(createAppShell(store)))
-    .catch((err) => console.log(err))
+  store.dispatch(fetchPostsIfNeeded()).then(()=>{
+    res.send(createAppShell(store));
+  },(err)=>{
+    console.log('err',err);
+  });
+
 });

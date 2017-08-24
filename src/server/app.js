@@ -10,4 +10,4 @@ app.use(shrinkRay());
 app.use(business());
 app.use('/*', routes); // everything else
 
-export default app
+export default app;

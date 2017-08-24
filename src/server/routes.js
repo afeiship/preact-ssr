@@ -9,8 +9,10 @@ import {readFileSync} from 'fs'
 import {fetchPostsIfNeeded} from './../app/store/actions/posts'
 import {updateLocation} from './../app/store/actions/meta'
 
-const assets = JSON.parse(readFileSync(`${__dirname}/public/assets.json`));
-const manifestUrl = `/${assets['manifest.json']}`;
+const assets = JSON.parse(readFileSync(`${__dirname}/public/rev-manifest.json`));
+
+
+const manifestUrl = `/${assets['static/manifest.json']}`;
 const inlineCss = readFileSync(`${__dirname}/public/${assets['bundle.css']}`);
 const inlineJs = readFileSync(`${__dirname}/public/${assets['bundle.js']}`);
 const AppShell = ({html, state}) => `<!DOCTYPE html>

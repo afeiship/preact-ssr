@@ -67,15 +67,12 @@
 
 
   gulp.task('build', [
-    'clean',
     'client',
     'styles',
     'static',
+    'server'
   ], function () {
-    gulp.start([
-      'rev',
-      'server'
-    ])
+    gulp.start(['rev',]);
   });
 
 

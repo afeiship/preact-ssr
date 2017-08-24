@@ -1,5 +1,5 @@
-# rollup-preact-spa
-> Preact spa use rollup.
+# preact-ssr
+> Preact ssr build with gulp & rollup.
 
 ## resources:
 + https://github.com/ezekielchentnik/preact-pwa

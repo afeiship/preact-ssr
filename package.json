@@ -1,11 +1,11 @@
 {
-  "name": "rollup-preact-spa",
+  "name": "preact-ssr",
   "version": "0.0.1",
-  "description": "Preact spa use rollup.",
+  "description": "Preact ssr build with gulp & rollup.",
   "scripts": {
-    "dev": "nodemon -e js,scss -w src -x \"node build && node ./build/server.js\"",
-    "start": "node ./build/server.js",
-    "build": "gulp"
+    "dev": "nodemon -e js,scss -w src -x \"node build && node ./dist/server.js\"",
+    "start": "node ./dist/server.js",
+    "build": "node build"
   },
   "dependencies": {
     "express": "4.15.2",

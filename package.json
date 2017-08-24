@@ -23,6 +23,7 @@
   "devDependencies": {
     "cssnano": "3.10.0",
     "fs-extra-promise": "1.0.1",
+    "gulp": "3.9.1",
     "node-rev": "2.0.0",
     "node-sass": "4.5.2",
     "nodemon": "1.11.0",

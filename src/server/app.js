@@ -1,6 +1,5 @@
 import express from 'express';
 import shrinkRay from 'shrink-ray';
-import business from './business';
 import routes from './routes';
 import { static as serveStatic } from 'express'
 
@@ -8,7 +7,6 @@ import { static as serveStatic } from 'express'
 const app = express();
 app.disable('x-powered-by');
 app.use(shrinkRay());
-app.use(business());
 app.use(serveStatic('dist/public'));
 app.use('/*', routes); // everything else
 

@@ -1,19 +1,15 @@
 import {h} from 'preact' // eslint-disable-line no-unused-vars
 import render from 'preact-render-to-string';
-import createStore from './../app/store/createStore';
-import App from './../app/components/App';
+import App from './../app/app';
 import {Router} from 'express';
-import fetch from 'node-fetch';
 import {readFileSync} from 'fs';
-import {fetchPostsIfNeeded} from './../app/store/actions/posts';
-import {updateLocation} from './../app/store/actions/meta';
 
 const assets = JSON.parse(readFileSync(`${__dirname}/public/rev-manifest.json`));
-
-
 const manifestUrl = `/${assets['static/manifest.json']}`;
-const inlineCss = readFileSync(`${__dirname}/public/${assets['style.css']}`);
-const inlineJs = readFileSync(`${__dirname}/public/${assets['bundle.js']}`);
+const inlineCss = readFileSync(`${__dirname}/public/${assets['style.css']}`); //<style>${inlineCss}</style>
+const inlineJs = readFileSync(`${__dirname}/public/${assets['bundle.js']}`); //<script>${inlineJs}</script>
+
+
 const AppShell = ({html, state}) => `<!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -24,31 +20,18 @@ const AppShell = ({html, state}) => `<!DOCTYPE html>
     <meta name="theme-color" content="#673ab8">
     <link rel="manifest" href="${manifestUrl}">
     <link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
-    <style>${inlineCss}</style>
+    <link rel="stylesheet" href="/${assets['style.css']}">
   </head>
   <body>
-    <div id="app">${html}</div>
-    <script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>
-    <script>${inlineJs}</script>
+    <main id="app">${html}</main>
+    <script>window.__INITIAL_STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>
+    <script src="/${assets['bundle.js']}"></script>
   </body>
 </html>`;
 
-const createInitialState = () => ({}); // stub
-
-const createAppShell = (store) => {
-  const state = store.getState();
-  const html = render(<App store={store}/>);
-  return AppShell({html, state})
-};
 
 export default Router().get('/', (req, res) => {
-  const store = createStore(createInitialState(), fetch);
-  store.dispatch(updateLocation(req.originalUrl));
-
-  store.dispatch(fetchPostsIfNeeded()).then(()=>{
-    res.send(createAppShell(store));
-  },(err)=>{
-    console.log('err',err);
-  });
-
+  res.send(
+    render(<App />)
+  );
 });
